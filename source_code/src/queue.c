@@ -18,12 +18,12 @@ int peek(struct queue_t * q)
      * given that q->size > 0
      * */
     int idx = 0;
-    uint32_t TP = q->proc[0].priority;
+    uint32_t TP = q->proc[0]->priority;
 
     for(int i = 1; i < q->size; ++i)
-        if(q->proc[i].priority > TP)
+        if(q->proc[i]->priority > TP)
         {
-            TP = q->proc[i].priority;
+            TP = q->proc[i]->priority;
             idx = i;
         }
 
