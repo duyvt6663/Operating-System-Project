@@ -26,7 +26,7 @@ struct pcb_t * get_proc(void) {
 	 * */
 	
 	pthread_mutex_lock(&queue_lock);
-	if(empty(&ready_queue))
+	if(empty(&ready_queue) && run_queue.size > 0)
 	{
 		/* Deep move from [run_queue] to [ready_queue] */
 		for(int i = 0; i < run_queue.size; ++i)
