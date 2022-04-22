@@ -149,7 +149,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		int prev_alloc_pages = 0;
 		for (int i = 0; i < NUM_PAGES; i++)
 		{
-			if (index_alloc_pages >= num_pages) break;
+			if (index_alloc_pages > num_pages) break;
 
 			if (_mem_stat[i].proc == 0)
 			{
