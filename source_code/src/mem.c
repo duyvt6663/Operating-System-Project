@@ -118,7 +118,18 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	 * to know whether this page has been used by a process.
 	 * For virtual memory space, check bp (break pointer).
 	 * */
-	
+
+	/* Change value of mem_avail */
+	if(proc->bp + num_pages * PAGE_SIZE < RAM_SIZE + 1)
+	{
+		int i = 0;
+		while((mem_avail < num_pages) && (i < NUM_PAGES))
+		{
+			/* Count the number of free pages in memory */
+			mem_avail += (_mem_stat[i++].proc == 0);
+		}
+		mem_avail = (mem_avail >= num_pages);
+	}
 	
 	if (mem_avail) {
 		/* We could allocate new memory region to the process */
