@@ -120,7 +120,8 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	 * */
 
 	/* Change value of mem_avail */
-	if(proc->bp + num_pages * PAGE_SIZE < RAM_SIZE + 1)
+	if( (proc->bp <= RAM_SIZE) &&
+		(proc->bp + num_pages * PAGE_SIZE <= RAM_SIZE) )
 	{
 		int i = 0;
 		while((mem_avail < num_pages) && (i < NUM_PAGES))
@@ -141,6 +142,8 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		 * 	- Add entries to segment table page tables of [proc]
 		 * 	  to ensure accesses to allocated memory slot is
 		 * 	  valid. */
+
+
 	}
 	pthread_mutex_unlock(&mem_lock);
 	return ret_mem;
