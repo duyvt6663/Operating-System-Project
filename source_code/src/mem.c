@@ -54,9 +54,9 @@ static struct page_table_t * get_page_table(
 	for (i = 0; i < seg_table->size; i++) {
 		// Enter your code here
 		if(seg_table->table[i].v_index == index)
-        {
-            return seg_table->table[i].pages;
-        }
+    {
+      return seg_table->table[i].pages;
+    }
 	}
 	return NULL;
 
@@ -143,7 +143,30 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		 * 	  to ensure accesses to allocated memory slot is
 		 * 	  valid. */
 
+		
+		/*Indexing allocated pages for process*/
+		int index_alloc_pages = 0;
+		int prev_alloc_pages = 0;
+		for (int i = 0; i < NUM_PAGES; i++)
+		{
+			if (index_alloc_pages >= num_pages) break;
 
+			if (_mem_stat[i].proc == 0)
+			{
+				_mem_stat[i].proc = proc->pid;
+				//update from second page on
+				if (index_alloc_pages > 0)
+				{
+					_mem_stat[prev_alloc_pages].next = i;
+				}
+				_mem_stat[i].index = index_alloc_pages;
+				index_alloc_pages++;
+				prev_alloc_pages = i;
+
+				/*update seg_table and page_table*/
+			}
+		}
+		_mem_stat[prev_alloc_pages].next = -1;
 	}
 	pthread_mutex_unlock(&mem_lock);
 	return ret_mem;
