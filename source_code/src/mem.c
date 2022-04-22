@@ -120,8 +120,8 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	 * */
 
 	/* Change value of mem_avail */
-	if( (proc->bp < RAM_SIZE) &&
-		(proc->bp + num_pages * PAGE_SIZE <= RAM_SIZE) )
+	if( (proc->bp < RAM_SIZE) && 			     // check for valid break pointer
+	    (proc->bp + num_pages * PAGE_SIZE <= RAM_SIZE) ) // check if allocated mem exceeds heap size
 	{
 		int i = 0;
 		while((mem_avail < num_pages) && (i < NUM_PAGES))
