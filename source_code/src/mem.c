@@ -120,7 +120,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	 * */
 
 	/* Change value of mem_avail */
-	if( (proc->bp <= RAM_SIZE) &&
+	if( (proc->bp < RAM_SIZE) &&
 		(proc->bp + num_pages * PAGE_SIZE <= RAM_SIZE) )
 	{
 		int i = 0;
