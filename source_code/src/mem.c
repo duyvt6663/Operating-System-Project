@@ -172,7 +172,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		int i = 0, 
 		current_page = 0;
 		
-		while(num_pages > current_page)
+		while(num_pages >= current_page)
 		{
 		  if(_mem_stat[i].proc == 0)
 		  {
