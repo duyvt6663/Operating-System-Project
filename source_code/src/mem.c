@@ -149,12 +149,11 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 					
 					/* Update seg_table and page_table */
 					// offset of v_addr
-					addr_t offset = get_offset(ret_mem);
+					addr_t offset = get_offset(ret_mem + current_page * PAGE_SIZE);
 					// v_index of seg_table
-					addr_t first_lv = get_first_lv(ret_mem);
+					addr_t first_lv = get_first_lv(ret_mem + current_page * PAGE_SIZE);
 					// v_index of page_table
-					addr_t second_lv = get_second_lv(ret_mem);
-					
+					addr_t second_lv = get_second_lv(ret_mem + current_page * PAGE_SIZE);
 
 					/* Search in the seg_table */
 					struct page_table_t *page_table = NULL;
