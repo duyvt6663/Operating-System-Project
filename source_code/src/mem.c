@@ -144,7 +144,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		 * 	  valid. */
 
 		
-		/*Indexing allocated pages for process*/
+		/*Indexing allocated pages for process
 		int index_alloc_pages = 0;
 		int prev_alloc_pages = 0;
 		for (int i = 0; i < NUM_PAGES; i++)
@@ -163,28 +163,28 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 				index_alloc_pages++;
 				prev_alloc_pages = i;
 
-				/*update seg_table and page_table*/
+				//update seg_table and page_table
 			}
 		}
 		_mem_stat[prev_alloc_pages].next = -1;
-		
+		*/
 		/* another way to forward mem_stat */
 		int i = 0, 
 		current_page = 0;
 		
-		while(num_page > current_page)
+		while(num_pages > current_page)
 		{
-		       if(mem[i].proc == 0)
-		       {
-			   mem[i].proc = proc->pid;
-			   mem[i].index = current_page++;
+		  if(_mem_stat[i].proc == 0)
+		  {
+			  _mem_stat[i].proc = proc->pid;
+			  _mem_stat[i].index = current_page++;
 
-			   int j = i;
-			   while(mem[j++].proc != 0){  }
-			   mem[i].next = j - 1;
-			   i = j - 2;
-		       }
-		       ++i;     
+			  int j = i;
+			  while(_mem_stat[j++].proc != 0){  }
+			  _mem_stat[i].next = j - 1;
+			  i = j - 2;
+			}
+		  ++i;     
 		}
 	}
 	pthread_mutex_unlock(&mem_lock);
