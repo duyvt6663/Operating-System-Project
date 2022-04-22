@@ -144,27 +144,57 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		/* forward _mem_stat */
 		int i = 0, 
 		current_page = 0;
-		
 		while (num_pages > current_page) {
 		  	if (_mem_stat[i].proc == 0) {
-				/* Update proc's pages in _mem_stat including
-				 * [proc], [index], [next] */
-				_mem_stat[i].proc = proc->pid;
-				_mem_stat[i].index = current_page++;
+					
+					/* Update seg_table and page_table */
+					// offset of v_addr
+					addr_t offset = get_offset(ret_mem);
+					// v_index of seg_table
+					addr_t first_lv = get_first_lv(ret_mem);
+					// v_index of page_table
+					addr_t second_lv = get_second_lv(ret_mem);
+					
 
-				/* find next position */
-				if (current_page == num_pages)
-					_mem_stat[i].next = -1;
-				else{
-					int j = i + 1;
-					while (_mem_stat[j++].proc != 0) {  }
-					_mem_stat[i].next = j - 1;
-					i = j - 2;
+					/* Search in the seg_table */
+					struct page_table_t *page_table = NULL;
+					page_table = get_page_table(first_lv, proc->seg_table);
+					if (page_table == NULL)
+					{
+						page_table = (struct page_table_t *)malloc(sizeof(struct page_table_t));
+						//first entry in page table
+						page_table->table[0].v_index = second_lv;
+						page_table->table[0].p_index = i;
+						page_table->size++;
+						
+						proc->seg_table->size++;
+					}
+					else
+					{
+						//use size as last entry
+						page_table->table[page_table->size].v_index = second_lv;	
+						page_table->table[page_table->size].p_index = i;
+						page_table->size++;	
+					}
+					
+					/* Update proc's pages in _mem_stat including
+					 * [proc], [index], [next] */
+					_mem_stat[i].proc = proc->pid;
+					_mem_stat[i].index = current_page++;
+
+					/* find next position */
+					if (current_page == num_pages)
+						_mem_stat[i].next = -1;
+					else
+					{
+						int j = i + 1;
+						while (_mem_stat[j++].proc != 0)
+						{
+						}
+						_mem_stat[i].next = j - 1;
+						i = j - 2;
 				}
-
-				/* Update seg_table and page_table */
-				
-			}
+				}
 		  	++i;     
 		}
 	}
