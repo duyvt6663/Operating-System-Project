@@ -146,7 +146,7 @@ int main(int argc, char * argv[]) {
 	struct timer_id_t * ld_event = attach_event();
 	start_timer();
 	
-	/* Init memory, for bloody sake */
+	/* Init memory, for fuck sake */
 	init_mem();
 	
 	/* Init scheduler */
