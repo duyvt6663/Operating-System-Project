@@ -145,10 +145,13 @@ int main(int argc, char * argv[]) {
 	}
 	struct timer_id_t * ld_event = attach_event();
 	start_timer();
-
+	
+	/* Init memory, for bloody sake */
+	mem_init();
+	
 	/* Init scheduler */
 	init_scheduler();
-
+	
 	/* Run CPU and loader */
 	pthread_create(&ld, NULL, ld_routine, (void*)ld_event);
 	for (i = 0; i < num_cpus; i++) {
