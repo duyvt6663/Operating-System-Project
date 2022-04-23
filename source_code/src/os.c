@@ -147,7 +147,7 @@ int main(int argc, char * argv[]) {
 	start_timer();
 	
 	/* Init memory, for bloody sake */
-	mem_init();
+	init_mem();
 	
 	/* Init scheduler */
 	init_scheduler();
