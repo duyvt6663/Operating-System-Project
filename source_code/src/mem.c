@@ -118,8 +118,9 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	 * */
 
 	/* Change value of mem_avail */
-	if ( (proc->bp < RAM_SIZE) && // check for valid break pointer
-	     (proc->bp + num_pages * PAGE_SIZE <= RAM_SIZE) ) // check if allocated mem exceeds heap size
+	if ( (proc->bp < RAM_SIZE) &&													 // check for valid break pointer
+			 (proc->bp + num_pages * PAGE_SIZE <= RAM_SIZE) && // check if allocated mem exceeds heap size
+			 (num_pages > 0) )                                 // check if num_pages == 0
 	{
 		int i = 0;
 		while((mem_avail < num_pages) && (i < NUM_PAGES))
@@ -127,7 +128,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 			/* Count the number of free pages in memory */
 			mem_avail += (_mem_stat[i++].proc == 0);
 		}
-		mem_avail = (mem_avail >= num_pages) & (num_pages > 0);
+		mem_avail = (mem_avail >= num_pages);
 	}
 	
 	if (mem_avail) {
