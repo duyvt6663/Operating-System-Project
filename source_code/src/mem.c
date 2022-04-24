@@ -168,7 +168,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 
 					//add entry to seg_table
 					proc->seg_table->table[proc->seg_table->size].pages = page_table;
-					proc->seg_table->table[proc->seg_table->size].v_index = first_lv;
+					proc->seg_table->table[proc->seg_table->size++].v_index = first_lv;
 				}
 				else
 				{
