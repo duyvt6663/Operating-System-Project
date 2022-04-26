@@ -156,10 +156,9 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 				struct page_table_t *page_table = NULL;
 				page_table = get_page_table(first_lv, proc->seg_table);
 				
-				int id;
+				int id = 0;
 				if (page_table == NULL)
 				{
-					id = 0;
 					page_table = (struct page_table_t *)malloc(sizeof(struct page_table_t));
 					//add entry to seg_table
 					proc->seg_table->table[proc->seg_table->size].pages = page_table;
