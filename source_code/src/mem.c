@@ -176,7 +176,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 				_mem_stat[i].proc = proc->pid;
 				_mem_stat[i].index = current_page++;
 
-				/* find next position */
+				/* find [next] position */
 				if (current_page == num_pages)
 					_mem_stat[i].next = -1;
 				else
