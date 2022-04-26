@@ -147,8 +147,6 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		current_page = 0;
 		while (num_pages > current_page) {
 		  	if (_mem_stat[i].proc == 0) {		
-
-				/* Update seg_table and page_table */
 				// v_index of seg_table
 				addr_t first_lv = get_first_lv(ret_mem + current_page * PAGE_SIZE);
 				// v_index of page_table
@@ -160,23 +158,16 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 				if (page_table == NULL)
 				{
 					page_table = (struct page_table_t *)malloc(sizeof(struct page_table_t));
-
-					//first entry in page table
-					page_table->table[0].v_index = second_lv;
-					page_table->table[0].p_index = i;
-					page_table->size++;
-
 					//add entry to seg_table
 					proc->seg_table->table[proc->seg_table->size].pages = page_table;
 					proc->seg_table->table[proc->seg_table->size++].v_index = first_lv;
 				}
-				else
-				{
-					//use size as last entry
-					page_table->table[page_table->size].v_index = second_lv;	
-					page_table->table[page_table->size].p_index = i;
-					page_table->size++;	
-				}
+
+				/* change entry in page table */
+				int id = (page_table == NULL)? 0 : page_table->size;
+				page_table->table[page_table->size].v_index = second_lv;	
+				page_table->table[page_table->size].p_index = i;
+				page_table->size++;	
 				
 				/* Update proc's pages in _mem_stat including
 			  	 * [proc], [index], [next] */
