@@ -145,7 +145,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 		/* forward _mem_stat */
 		int i = 0, 
 			current_page = 0,
-			last_page = 0;
+			last_page = -1;
 		while (num_pages > current_page) {
 		  	if (_mem_stat[i].proc == 0) {		
 				// v_index of seg_table
@@ -176,7 +176,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 			  	 * [proc], [index], [next] */
 				_mem_stat[i].proc = proc->pid;
 				_mem_stat[i].index = current_page++;
-			    _mem_stat[(last_page > -1)? last_page : i].next = i; 
+			  _mem_stat[(last_page > -1)? last_page : i].next = i; 
 
 				last_page = i;
 			}
