@@ -164,7 +164,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 					proc->seg_table->table[proc->seg_table->size].pages = page_table;
 					proc->seg_table->table[proc->seg_table->size++].v_index = first_lv;
 				}
-				else id = page->size;
+				else id = page_table->size;
 				
 				/* change entry in page table */
 				page_table->table[id].v_index = second_lv;	
@@ -227,24 +227,16 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 			int i = -1;
 			while (page_table->table[++i].v_index != second_lv) {  }
 			/* Remove this entry in page table */
-			for (; i < page_table->size - 1; i++) {
-				page_table->table[i].v_index = page_table->table[i + 1].v_index;
-				page_table->table[i].p_index = page_table->table[i + 1].p_index;
-			}
+			page_table->table[i] = page_table->table[--page_table->size];
 			
-			if (--page_table->size == 0) {
-				/* Remove this entry in seg table */
+			if (page_table->size == 0) {
 				free(page_table);
 				struct seg_table_t *temp = proc->seg_table;
 
 				i = -1;
 				while (temp->table[++i].v_index != first_lv) {  }
-
-				for (; i < temp->size - 1; i++) {
-					temp->table[i].v_index = temp->table[i + 1].v_index;
-					temp->table[i].pages = temp->table[i + 1].pages;
-				}
-				temp->size--;
+				/* Remove this entry in seg table */
+				temp->table[i] = temp->table[--temp->size];
 			}
 			
 			/* Reset _mem_stat entries */
