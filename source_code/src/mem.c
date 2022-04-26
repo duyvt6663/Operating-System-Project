@@ -155,18 +155,21 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 				/* Search in the seg_table */
 				struct page_table_t *page_table = NULL;
 				page_table = get_page_table(first_lv, proc->seg_table);
+				
+				int id;
 				if (page_table == NULL)
 				{
+					id = 0;
 					page_table = (struct page_table_t *)malloc(sizeof(struct page_table_t));
 					//add entry to seg_table
 					proc->seg_table->table[proc->seg_table->size].pages = page_table;
 					proc->seg_table->table[proc->seg_table->size++].v_index = first_lv;
 				}
-
+				else id = page->size;
+				
 				/* change entry in page table */
-				int id = (page_table == NULL)? 0 : page_table->size;
-				page_table->table[page_table->size].v_index = second_lv;	
-				page_table->table[page_table->size].p_index = i;
+				page_table->table[id].v_index = second_lv;	
+				page_table->table[id].p_index = i;
 				page_table->size++;	
 				
 				/* Update proc's pages in _mem_stat including
