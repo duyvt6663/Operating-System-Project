@@ -124,17 +124,18 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 
 	/* Search in virtual address space 
 	 * using first-fit scheme */
-	int count = 0; // number of contiguous free pages
-	addr_t i;
+	int    count = 0; // number of contiguous free pages
+	addr_t i,         // end-point of allocated memory
+	       dummy;     // dummy to translate in
 	for (i = PAGE_SIZE; i < proc->bp; i += PAGE_SIZE) {
-		if (!translate(i, &ret_mem, proc)) { // use ret_mem as a dummy
+		if (!translate(i, &dummy, proc)) {
 			if (++count == num_pages) {
 				break;
 			}
 		}else{
 			count = 0;
 		}
-	}
+	}	
 
 	/* Check physical memory via mem_avail */
 	if (proc->bp + (num_pages - count) * PAGE_SIZE <= RAM_SIZE) {
