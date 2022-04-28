@@ -215,7 +215,6 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 	 * 	  processes.  */
 	
 	int32_t	p_addr;
-	int 	counter = 0;
 	addr_t 	first_lv, 
 			second_lv;
 	struct page_table_t 
@@ -236,13 +235,12 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 			page_table->table[i] = page_table->table[--page_table->size];
 			
 			if (page_table->size == 0) {
-				free(page_table);
 				struct seg_table_t *temp = proc->seg_table;
-
 				i = -1;
 				while (temp->table[++i].v_index != first_lv) {  }
 				/* Remove this entry in seg table */
 				temp->table[i] = temp->table[--temp->size];
+				free(page_table);
 			}
 			
 			/* Reset _mem_stat entries */
