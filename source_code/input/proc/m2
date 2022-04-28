@@ -1,0 +1,6 @@
+1 5
+alloc 2022 0
+alloc 2000 1
+alloc 1332 2
+free 1
+alloc 77 1
