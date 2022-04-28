@@ -192,7 +192,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 				/* Update entries in _mem_stat */
 				_mem_stat[i].proc = proc->pid;
 				_mem_stat[i].index = current_page++;
-			    _mem_stat[(last_page > -1)? last_page : i].next = i; 
+			  _mem_stat[(last_page > -1)? last_page : i].next = i; 
 
 				last_page = i;
 			}
