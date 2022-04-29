@@ -105,7 +105,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 	 * */
 
 	uint32_t num_pages = (size % PAGE_SIZE) ? size / PAGE_SIZE + 1 
-											: size / PAGE_SIZE; // Number of pages we will use
+						: size / PAGE_SIZE; // Number of pages we will use
 	int mem_avail = 0; // We could allocate new memory region or not?
 
 	/* First we must check if the amount of free memory in
@@ -124,24 +124,21 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 
 	/* Search in virtual address space 
 	 * using first-fit scheme */
-	int count = 0; // number of contiguous free pages
-	addr_t i;
+	int    count = 0; // number of contiguous free pages
+	addr_t i,         // end-point of allocated memory
+	       dummy;     // dummy to translate in
 	for (i = PAGE_SIZE; i < proc->bp; i += PAGE_SIZE) {
-		if (!translate(i, &ret_mem, proc)) { // use ret_mem as a dummy
+		if (!translate(i, &dummy, proc)) {
 			if (++count == num_pages) {
 				break;
 			}
 		}else{
 			count = 0;
 		}
-	}
+	}	
 
 	/* Check physical memory via mem_avail */
 	if (proc->bp + (num_pages - count) * PAGE_SIZE <= RAM_SIZE) {
-		/* move ret_mem and bp assignment here */
-		ret_mem = i - (count - 1) * PAGE_SIZE;
-		proc->bp += (num_pages - count) * PAGE_SIZE;
-
 		int j = 0;
 		while ((mem_avail < num_pages) && (j < NUM_PAGES)) {
 			/* Count the number of free pages in memory */
@@ -153,8 +150,8 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {
 
 	if (mem_avail) {
 		/* We could allocate new memory region to the process */
-			//ret_mem = proc->bp;
-			//proc->bp += num_pages * PAGE_SIZE;
+		ret_mem = i - (count - 1) * PAGE_SIZE;
+		proc->bp += (num_pages - count) * PAGE_SIZE;
 		/* Update status of physical pages which will be allocated
 		 * to [proc] in _mem_stat. Tasks to do:
 		 * 	- Update [proc], [index], and [next] field
