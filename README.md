@@ -1,2 +1,2 @@
 # Operating-System-Project
-Alley where degenerates gather and do codes
+Scheduler and Heap Allocator of an OS implemented using Priority Queue 
